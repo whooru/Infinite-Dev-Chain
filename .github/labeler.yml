@@ -1,0 +1,18 @@
+python:
+  - 'languages/python/**/*'
+javascript:
+  - 'languages/javascript/**/*'
+
+kotlin:
+  - 'languages/kotlin/**/*'
+
+
+documentation:
+  - 'docs/**/*'
+  - '**/*.md'
+
+ci:
+  - '.github/workflows/**/*'
+
+tools:
+  - 'tools/**/*'
