@@ -1,0 +1,26 @@
+version: 2
+updates:
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # npm (JS/TS)
+  - package-ecosystem: "npm"
+    directory: "/languages/javascript"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+
+  # Python (pip/pyproject)
+  - package-ecosystem: "pip"
+    directory: "/languages/python"
+    schedule:
+      interval: "weekly"
+
+  # Kotlin/Gradle
+  - package-ecosystem: "gradle"
+    directory: "/languages/kotlin"
+    schedule:
+      interval: "weekly"
