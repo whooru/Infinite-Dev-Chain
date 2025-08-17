@@ -46,7 +46,7 @@ jobs:
             compiled: true
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # Если файлов языка нет — пропускаем всю оставшуюся часть
       - name: Detect ${{ matrix.lang }} sources
