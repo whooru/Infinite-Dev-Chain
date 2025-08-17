@@ -5,18 +5,22 @@ The idea is simple: every player contributes a small piece of code to the projec
 Over time, the repository becomes a fun, chaotic, multilingual codebase that grows infinitely.
 
 ## How it works
-1. **Pick a language** you want to write in — Python, JavaScript, Go, Kotlin, C++, Rust, anything!
-2. **Add a new file** (or extend an existing one) with a small, self-contained piece of code.
+1. **Pick a language** you want to write in — Python, JavaScript, Kotlin, Go, Rust, etc.
+2. **Add a new file** (or extend an existing one) with a small, self-contained piece of code or abstraction.
 3. **Commit & open a Pull Request**.
 4. Once merged, your contribution becomes part of the chain.
 
-## Rules
-- Each commit should add **something functional** — a function, a class, a snippet that can run or demonstrate something.
-- Keep files **lightweight** and avoid breaking existing examples.
-- You can **build on top** of previous code or start something new.
+## 📜 Rules
+- At the **early stage** prefer adding **interfaces, abstractions, and core building blocks** to form a strong foundation.
+- Each commit should add **something functional** — a function, a class, or a runnable snippet.
+- Keep files lightweight and avoid breaking existing examples.
+- You can build on top of previous code or start something new.
 - Be creative — the point is to make it fun!
+- Follow the [Contributing Guide](CONTRIBUTING.md).
 
-## Project structure
+## 🧩 Game phases
+The project evolves in stages — from setup, to early gameplay, to strict CI enforcement, and eventually scoring.  
+See [Game Phases](docs/game-phases.md) for details.
 
 ## Why participate?
 - Practice coding in different languages.
@@ -29,3 +33,8 @@ Over time, the repository becomes a fun, chaotic, multilingual codebase that gro
 2. Create a new branch:
    ```bash
    git checkout -b my-contribution
+   ```
+3. Make your change, commit, and open a Pull Request.
+
+## License
+This project is licensed under the [MIT License](LICENSE).
