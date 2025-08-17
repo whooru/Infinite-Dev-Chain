@@ -22,6 +22,9 @@ Over time, the repository becomes a fun, chaotic, multilingual codebase that gro
 - You can build on top of previous code or start something new.
 - Be creative — the point is to make it fun!
 - Follow the [Contributing Guide](CONTRIBUTING.md).
+- See [Rules](docs/rules.md) for philosophy and allowed moves.
+
+This is not limited to creating a “game” — contributions can evolve into any kind of project (a tool, a library, a service). The fun part is that no one knows where it will go.
 
 ## 🧩 Game phases
 The project evolves in stages — from setup, to early gameplay, to strict CI enforcement, and eventually scoring.  
