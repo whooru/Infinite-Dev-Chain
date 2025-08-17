@@ -2,22 +2,129 @@ name: CI
 
 on:
   pull_request:
-    branches: [ main ]
   push:
     branches: [ main ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  ci:
-    name: CI       
+  detect:
+    name: Detect changed languages
     runs-on: ubuntu-latest
-
+    outputs:
+      js: ${{ steps.out.outputs.js }}
+      py: ${{ steps.out.outputs.py }}
+      kt: ${{ steps.out.outputs.kt }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Sanity
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - id: out
         run: |
-          echo "CI green ✅"
+          bash tools/ci/changed_langs.sh > /tmp/changed
+          cat /tmp/changed
+          js=$(grep -q 'JS=true' /tmp/changed && echo true || echo false)
+          py=$(grep -q 'PY=true' /tmp/changed && echo true || echo false)
+          kt=$(grep -q 'KT=true' /tmp/changed && echo true || echo false)
+          echo "js=$js" >> $GITHUB_OUTPUT
+          echo "py=$py" >> $GITHUB_OUTPUT
+          echo "kt=$kt" >> $GITHUB_OUTPUT
+
+  js:
+    name: JavaScript
+    runs-on: ubuntu-latest
+    needs: [detect]
+    if: needs.detect.outputs.js == 'true'
+    defaults: { run: { working-directory: languages/javascript } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: languages/javascript/package.json
+      - run: npm ci
+      - run: npm run lint --if-present
+      - run: npm test --if-present -- --ci
+      - run: npm run coverage --if-present
+      - name: Upload JS coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-js
+          path: |
+            languages/javascript/coverage
+            languages/javascript/.coverage*
+          if-no-files-found: ignore
+
+  py:
+    name: Python
+    runs-on: ubuntu-latest
+    needs: [detect]
+    if: needs.detect.outputs.py == 'true'
+    defaults: { run: { working-directory: languages/python } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+      - run: pip install -e .[dev]
+      - run: ruff check .
+      - run: black --check .
+      - run: pytest -q --maxfail=1 --disable-warnings
+      - run: pytest -q --cov=src --cov-report=xml --cov-report=term
+      - name: Upload Py coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-py
+          path: |
+            languages/python/coverage.xml
+            languages/python/htmlcov
+          if-no-files-found: ignore
+
+  kt:
+    name: Kotlin
+    runs-on: ubuntu-latest
+    needs: [detect]
+    if: needs.detect.outputs.kt == 'true'
+    defaults: { run: { working-directory: languages/kotlin } }
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+      - run: ./gradlew --version
+      - run: ./gradlew ktlintCheck
+      - run: ./gradlew test
+      - run: ./gradlew jacocoTestReport
+      - name: Upload Kotlin coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-kt
+          path: |
+            languages/kotlin/build/reports/tests
+            languages/kotlin/build/reports/jacoco
+          if-no-files-found: ignore
+
+  ci:
+    name: CI
+    runs-on: ubuntu-latest
+    needs: [detect, js, py, kt]
+    if: always()
+    steps:
+      - name: Summary
+        run: |
+          echo "### Language jobs" >> $GITHUB_STEP_SUMMARY
+          echo "- JS: ${{ needs.js.result || 'skipped' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- PY: ${{ needs.py.result || 'skipped' }}" >> $GITHUB_STEP_SUMMARY
+          echo "- KT: ${{ needs.kt.result || 'skipped' }}" >> $GITHUB_STEP_SUMMARY
