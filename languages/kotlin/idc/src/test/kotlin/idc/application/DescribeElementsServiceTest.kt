@@ -4,8 +4,8 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class DescribeElementsServiceTest {
-    @Test
-    fun placeholder() {
-        assertTrue(true)
-    }
+  @Test
+  fun placeholder() {
+    assertTrue(true)
+  }
 }

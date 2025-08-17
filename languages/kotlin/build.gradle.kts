@@ -1,5 +1,5 @@
 plugins {
-
+    
 }
 
 allprojects {
@@ -7,4 +7,3 @@ allprojects {
         mavenCentral()
     }
 }
-
