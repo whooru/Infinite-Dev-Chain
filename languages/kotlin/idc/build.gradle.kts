@@ -7,10 +7,15 @@ plugins {
   id("jvm-test-suite")
   kotlin("jvm")
   id("org.jlleitschuh.gradle.ktlint")
+  jacoco
 }
 
 group = "idc"
 version = "0.1.0"
+
+jacoco {
+    toolVersion = "0.8.11"
+}
 
 java {
   toolchain {
@@ -91,7 +96,33 @@ tasks.register("openTestReport") {
 tasks.named<Test>("test") {
   finalizedBy("openTestReport")
   useJUnitPlatform()
+  finalizedBy(tasks.named("jacocoTestReport"))
 }
+
+tasks.named<JacocoReport>("jacocoTestReport") {
+    dependsOn(tasks.test)
+
+    classDirectories.setFrom(
+        files(layout.buildDirectory.dir("classes/kotlin/main"))
+    )
+    sourceDirectories.setFrom(files("src/main/kotlin"))
+    executionData.setFrom(files(layout.buildDirectory.file("jacoco/test.exec")))
+
+    reports {
+        xml.required.set(true)    // for CI tools
+        html.required.set(true)   // for humans
+    }
+}
+
+
+ktlint {
+  filter {
+    include("**/src/**/*.kt")
+    exclude("**/build/**")
+    exclude("**/*.kts")
+  }
+}
+
 
 // macOS automatically creates hidden "._*" files on external drives (AppleDouble files).
 // They are metadata/resource fork files that are useless for source control and can
