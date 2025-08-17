@@ -1,5 +1,5 @@
-[![CI](https://github.com/<owner>/<repo>/actions/workflows/ci.yml/badge.svg)](https://github.com/<owner>/<repo>/actions/workflows/ci.yml)
-[![CodeQL](https://github.com/<owner>/<repo>/actions/workflows/codeql.yml/badge.svg)](https://github.com/<owner>/<repo>/actions/workflows/codeql.yml)
+[![CI](https://github.com/whooru/Infinite-Dev-Chain/actions/workflows/ci.yml/badge.svg)](https://github.com/whooru/Infinite-Dev-Chain/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/whooru/Infinite-Dev-Chain/actions/workflows/codeql.yml/badge.svg)](https://github.com/whooru/Infinite-Dev-Chain/actions/workflows/codeql.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
 
