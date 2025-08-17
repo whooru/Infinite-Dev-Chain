@@ -1,0 +1,50 @@
+# .github/ISSUE_TEMPLATE/feature_request.yml
+name: "✨ Feature request"
+description: Propose an improvement or a new game mechanic
+labels: ["enhancement"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a new feature or improvement!  
+        Please keep proposals small, incremental, and aligned with the spirit of the game.
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why is this useful for the project/game?
+      placeholder: "This feature would help contributors by..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: Describe the feature. Keep it small and incremental.
+      placeholder: "Add a scoring mechanic that awards points when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples
+      description: Mockups, pseudo-code, or references.
+      placeholder: |
+        Example:
+        ```js
+        score += 10
+        ```
+        Or a link to a similar idea in another project.
+  
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: Define what is *in* and what is *out* for the first iteration.
+      placeholder: |
+        In scope: basic scoring for tests
+        Out of scope: full leaderboard integration

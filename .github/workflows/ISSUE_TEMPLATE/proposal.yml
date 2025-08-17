@@ -1,0 +1,45 @@
+# .github/ISSUE_TEMPLATE/proposal.yml
+name: "🧪 Proposal / Experiment"
+description: Pitch an idea for a new language folder, mini-game, or experiment
+labels: ["proposal"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing an idea or experiment!  
+        Keep it small and focused — proposals should be easy to try, even if they're not permanent.
+
+  - type: textarea
+    id: idea
+    attributes:
+      label: Idea
+      description: Short description of your proposal.
+      placeholder: "Example: Add a Rust folder for functional experiments."
+    validations:
+      required: true
+
+  - type: textarea
+    id: fit
+    attributes:
+      label: How it fits the game
+      description: Why is this interesting or useful for Infinite Dev Chain?
+      placeholder: "Encourages contributions in a new language and expands the variety of snippets."
+    validations:
+      required: true
+
+  - type: textarea
+    id: slice
+    attributes:
+      label: Minimal slice
+      description: What is the smallest useful version we can start with?
+      placeholder: "Add folder structure and hello world example first."
+    validations:
+      required: true
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Risks / Open questions
+      description: Anything we should watch out for?
+      placeholder: "Maintenance effort, duplication of existing features, unclear rules..."
