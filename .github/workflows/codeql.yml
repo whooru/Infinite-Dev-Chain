@@ -14,7 +14,6 @@ on:
   schedule:
     - cron: '0 3 * * 1'
 
-# Даем CodeQL всё, что нужно
 permissions:
   contents: read
   actions: read
@@ -25,31 +24,36 @@ jobs:
     name: CodeQL
     runs-on: ubuntu-latest
 
-    # В PR из форков пропускаем (у токена там урезаны права)
+    # Skip PRs from forks (insufficient token permissions on forks)
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
 
     strategy:
       fail-fast: false
       matrix:
         include:
-          - lang: python
+          - name: python
             glob: 'languages/python/**'
-            compiled: false
-          - lang: javascript
+            codeql_lang: 'python'
+            build: 'none'
+          - name: javascript
             glob: 'languages/javascript/**'
-            compiled: false
-          - lang: kotlin
+            codeql_lang: 'javascript'
+            build: 'none'
+          # Kotlin is analyzed as "java"; we do a manual Gradle build
+          - name: kotlin
             glob: 'languages/kotlin/**'
-            compiled: true
-          - lang: java
+            codeql_lang: 'java'
+            build: 'manual-kotlin'
+          # Placeholder for a future pure-Java module (kept for completeness)
+          - name: java
             glob: 'languages/java/**'
-            compiled: true
+            codeql_lang: 'java'
+            build: 'autobuild'
 
     steps:
       - uses: actions/checkout@v5
 
-      # Если файлов языка нет — пропускаем всю оставшуюся часть
-      - name: Detect ${{ matrix.lang }} sources
+      - name: Detect ${{ matrix.name }} sources
         id: detect
         run: |
           if [ -z "$(git ls-files '${{ matrix.glob }}')" ]; then
@@ -58,25 +62,33 @@ jobs:
             echo "found=true" >> "$GITHUB_OUTPUT"
           fi
 
-      # Инициализация для интерпретируемых (без build-mode)
-      - name: Initialize CodeQL (${{ matrix.lang }}) — interp
-        if: steps.detect.outputs.found == 'true' && matrix.compiled == false
+      - name: Setup JDK (for java/kotlin only)
+        if: steps.detect.outputs.found == 'true' && (matrix.codeql_lang == 'java')
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Initialize CodeQL (${{ matrix.name }})
+        if: steps.detect.outputs.found == 'true'
         uses: github/codeql-action/init@v3
         with:
-          languages: ${{ matrix.lang }}
+          languages: ${{ matrix.codeql_lang }}
 
-      # Инициализация для компилируемых (с autobuild)
-      - name: Initialize CodeQL (${{ matrix.lang }}) — compiled
-        if: steps.detect.outputs.found == 'true' && matrix.compiled == true
-        uses: github/codeql-action/init@v3
-        with:
-          languages: ${{ matrix.lang }}
-          build-mode: autobuild
-
-      - name: Autobuild (${{ matrix.lang }})
-        if: steps.detect.outputs.found == 'true' && matrix.compiled == true
+      - name: Autobuild (java)
+        if: steps.detect.outputs.found == 'true' && matrix.build == 'autobuild'
         uses: github/codeql-action/autobuild@v3
 
-      - name: Analyze (${{ matrix.lang }})
+      - name: Manual build (kotlin)
+        if: steps.detect.outputs.found == 'true' && matrix.build == 'manual-kotlin'
+        working-directory: languages/kotlin
+        run: |
+          chmod +x gradlew
+          ./gradlew :idc:build -x test --no-daemon --stacktrace
+
+      - name: Analyze (${{ matrix.name }})
         if: steps.detect.outputs.found == 'true'
         uses: github/codeql-action/analyze@v3
+        with:
+          category: '/language:${{ matrix.codeql_lang }}'

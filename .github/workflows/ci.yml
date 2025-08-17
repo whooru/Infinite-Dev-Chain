@@ -102,10 +102,15 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: gradle
+
+      - name: Make Gradle wrapper executable
+        run: chmod +x gradlew
+
       - run: ./gradlew --version
-      - run: ./gradlew ktlintCheck
-      - run: ./gradlew test
-      - run: ./gradlew jacocoTestReport
+      - run: ./gradlew ktlintCheck --no-daemon --stacktrace
+      - run: ./gradlew test --no-daemon --stacktrace
+      - run: ./gradlew jacocoTestReport --no-daemon --stacktrace
+
       - name: Upload Kotlin coverage
         if: always()
         uses: actions/upload-artifact@v4
@@ -115,7 +120,7 @@ jobs:
             languages/kotlin/build/reports/tests
             languages/kotlin/build/reports/jacoco
           if-no-files-found: ignore
-
+          
   ci:
     name: CI
     runs-on: ubuntu-latest
