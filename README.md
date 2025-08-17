@@ -37,4 +37,4 @@ See [Game Phases](docs/game-phases.md) for details.
 3. Make your change, commit, and open a Pull Request.
 
 ## License
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [Apache License 2.0](LICENSE).
