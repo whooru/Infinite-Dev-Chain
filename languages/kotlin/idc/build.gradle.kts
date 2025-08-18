@@ -41,7 +41,7 @@ testing {
       useJUnitJupiter()
 
       dependencies {
-        implementation(platform("org.junit:junit-bom:5.10.2"))
+        implementation(platform("org.junit:junit-bom:5.13.4"))
         implementation("org.junit.jupiter:junit-jupiter")
         implementation("org.jetbrains.kotlin:kotlin-test")
       }
