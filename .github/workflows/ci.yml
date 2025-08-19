@@ -21,7 +21,7 @@ jobs:
       py: ${{ steps.out.outputs.py }}
       kt: ${{ steps.out.outputs.kt }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with: { fetch-depth: 0 }
       - id: out
         run: |
@@ -41,7 +41,7 @@ jobs:
     if: needs.detect.outputs.js == 'true'
     defaults: { run: { working-directory: languages/javascript } }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -68,7 +68,7 @@ jobs:
     if: needs.detect.outputs.py == 'true'
     defaults: { run: { working-directory: languages/python } }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -95,7 +95,7 @@ jobs:
     if: needs.detect.outputs.kt == 'true'
     defaults: { run: { working-directory: languages/kotlin } }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Setup JDK
         uses: actions/setup-java@v4
         with:
