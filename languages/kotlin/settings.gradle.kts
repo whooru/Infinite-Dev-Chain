@@ -4,7 +4,7 @@ pluginManagement {
         mavenCentral()
     }
     plugins {
-        id("org.jetbrains.kotlin.jvm") version "2.0.0" 
+        id("org.jetbrains.kotlin.jvm") version "2.2.10" 
         id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
     }
 }
